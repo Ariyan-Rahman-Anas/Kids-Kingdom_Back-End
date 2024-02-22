@@ -26,24 +26,28 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-      // await client.connect();
-      
-      //db collections should be in here
+    // await client.connect();
+
+    //db collections should be in here
     const productsCollection = client.db("Kids-Kingdom").collection("Products");
 
-      //getting all products
-      app.get("/products", async (req, res) => {
-          const result = await productsCollection.find().toArray()
-          res.send(result)
-      })
-      
-      //storing all products
-      app.post("/products", async (req, res) => {
-          const product = req.body
-          const result = await productsCollection.insertOne(product)
-          res.send(result);
-      })
 
+    //getting all bookings for the client side
+    app.get("/products", async (req, res) => {
+      let query = {};
+      if (req.query?.email) {
+        query = { email: req.query?.email };
+      }
+      const result = await productsCollection.find(query).toArray();
+      res.send(result);
+    });
+
+    //storing all products
+    app.post("/products", async (req, res) => {
+      const product = req.body;
+      const result = await productsCollection.insertOne(product);
+      res.send(result);
+    });
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
