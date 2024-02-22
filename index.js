@@ -31,7 +31,6 @@ async function run() {
     //db collections should be in here
     const productsCollection = client.db("Kids-Kingdom").collection("Products");
 
-
     //getting all bookings for the client side
     app.get("/products", async (req, res) => {
       let query = {};
@@ -46,6 +45,14 @@ async function run() {
     app.post("/products", async (req, res) => {
       const product = req.body;
       const result = await productsCollection.insertOne(product);
+      res.send(result);
+    });
+
+    //deleting item form myBookings cart
+    app.delete("/products/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await productsCollection.deleteOne(query);
       res.send(result);
     });
 
