@@ -31,6 +31,11 @@ async function run() {
       //db collections should be in here
     const productsCollection = client.db("Kids-Kingdom").collection("Products");
 
+      //getting all products
+      app.get("/products", async (req, res) => {
+          const result = await productsCollection.find().toArray()
+          res.send(result)
+      })
       
       //storing all products
       app.post("/products", async (req, res) => {
